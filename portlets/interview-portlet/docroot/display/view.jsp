@@ -56,7 +56,7 @@ catch (Exception e) {
 		<liferay-ui:message key="interview-has-expired" />
 	</c:when>
 	<c:otherwise>
-		<liferay-ui:message key="the-time-limit-by-minutes-are:" /><%= timeLimit %>
+		<liferay-ui:message arguments="<%= timeLimit %>" key="time-limit-x-minutes" />
 
 		<portlet:renderURL var="updateStartDateURL">
 			<portlet:param name="mvcPath" value="/display/view_questions.jsp" />
