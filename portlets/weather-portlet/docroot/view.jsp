@@ -16,8 +16,6 @@
 
 <%@ include file="/init.jsp" %>
 
-<form name="<portlet:namespace />fm" onSubmit="submitForm(document.<portlet:namespace />fm, 'http://www.weather.com/search/enhancedlocalsearch', false); return false;" target="_blank">
-
 <table class="lfr-table">
 
 <%
@@ -56,10 +54,4 @@ for (int i = 0; i < zips.length; i++) {
 
 </table>
 
-</form>
-
-<c:if test="<%= windowState.equals(WindowState.MAXIMIZED) %>">
-	<aui:script>
-		Liferay.Util.focusFormField(document.<portlet:namespace />fm.where);
-	</aui:script>
-</c:if>
+<span style="font-size: xx-small;"><liferay-ui:message key="powered-by" /> <a href="http://www.worldweatheronline.com" target="_blank">World Weather Online</a></span>
