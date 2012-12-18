@@ -26,6 +26,12 @@ Interview interview = InterviewLocalServiceUtil.getInterview(interviewId);
 QuestionSet questionSet = QuestionSetLocalServiceUtil.getQuestionSet(interview.getQuestionSetId());
 
 List<Question> questions= QuestionLocalServiceUtil.getQuestionSetQuestions(interview.getQuestionSetId());
+
+JSONObject JSONResponse = JSONFactoryUtil.createJSONObject(interview.getResponse());
+
+List<JSONArray> recordList = new ArrayList<JSONArray>();
+
+int m = 0;
 %>
 
 <liferay-ui:header
@@ -35,6 +41,23 @@ List<Question> questions= QuestionLocalServiceUtil.getQuestionSetQuestions(inter
 
 <%
 for (Question question : questions) {
+	if(question.getType() == QuestionTypeConstants.RECORDED) {
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		String recorded = JSONResponse.getString(String.valueOf(question.getQuestionId()));
+
+		if(!recorded.equals("")) {
+			for(int j=0; j<recorded.split("/").length; j++) {
+				JSONObject json = JSONFactoryUtil.createJSONObject(recorded.split("/")[j]);
+
+				jsonArray.put(json);
+			}
+
+		}
+
+		recordList.add(jsonArray);
+	}
+
 %>
 
 	<aui:field-wrapper label="<%= HtmlUtil.escape(question.getTitle()) %>">
@@ -49,6 +72,7 @@ for (Question question : questions) {
 			</c:when>
 			<c:when test="<%= question.getType() == QuestionTypeConstants.RECORDED %>">
 				<textarea id="<portlet:namespace />response<%= question.getQuestionId() %>" readonly="readonly"></textarea>
+				<button onclick="return replay('<%= question.getQuestionId() %>', '<%= m++ %>')">Replay</button>
 			</c:when>
 		</c:choose>
 	</aui:field-wrapper>
@@ -56,6 +80,43 @@ for (Question question : questions) {
 <%
 }
 %>
+
+	<script type="text/javascript">
+		var recorder = new Array();
+		var dmp = new diff_match_patch();
+
+		<%
+		for (JSONArray ja: recordList) {
+		%>
+
+			recorder.push(<%= ja%>);
+
+		<%
+		}
+		%>
+
+		function replay(questionId, i) {
+			var textarea = document.getElementById("<portlet:namespace />response" + questionId);
+
+			textarea.value = "";
+
+			replayEvent(0, questionId, i);
+		}
+
+		function replayEvent(j, questionId, i) {
+
+			var textarea = document.getElementById("<portlet:namespace />response" + questionId);
+
+			var result = dmp.patch_apply((recorder[i])[j].patch, textarea.value);
+
+			textarea.value = result[0];
+
+			if (j < (recorder[i].length - 1)) {
+				setTimeout("replayEvent("+(j+1)+"," + questionId +","+ i +")", ((recorder[i])[j+1].timestamp - (recorder[i])[j].timestamp));
+			}
+		}
+
+	</script>
 
 <aui:script>
 	Alloy.on('domready', function (event) {

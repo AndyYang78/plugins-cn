@@ -8,6 +8,7 @@
 		<configuration-action-class>com.liferay.portal.kernel.portlet.DefaultConfigurationAction</configuration-action-class>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/admin/css/main.css</header-portlet-css>
+		<header-portlet-javascript>/js/diff_match_patch.js</header-portlet-javascript>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>interview-admin-portlet</css-class-wrapper>
 	</portlet>
@@ -16,6 +17,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/display/css/main.css</header-portlet-css>
+		<header-portlet-javascript>/js/diff_match_patch.js</header-portlet-javascript>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>interview-display-portlet</css-class-wrapper>
 	</portlet>

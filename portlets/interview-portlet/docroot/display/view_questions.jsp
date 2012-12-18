@@ -36,8 +36,11 @@ List<Question> questions = QuestionLocalServiceUtil.getQuestionSetQuestions(inte
 	<aui:input name="uuid" value="<%= interview.getUuid() %>" type="hidden" />
 
 	<%
-	for (Question question : questions) {
+	for (int i = 0; i < questions.size(); i++) {
+		Question question = questions.get(i);
 	%>
+
+		<input id="<portlet:namespace />recorder<%= question.getQuestionId() %>" name="<portlet:namespace />recorder<%= question.getQuestionId() %>" type="hidden" />
 
 		<aui:field-wrapper label="<%= HtmlUtil.escape(question.getTitle()) %>">
 			<div class="description"><%= HtmlUtil.escape(question.getDescription()) %></div>
@@ -50,7 +53,7 @@ List<Question> questions = QuestionLocalServiceUtil.getQuestionSetQuestions(inte
 					<textarea id="<portlet:namespace />response<%= question.getQuestionId() %>" name="<portlet:namespace />response<%= question.getQuestionId() %>"></textarea>
 				</c:when>
 				<c:when test="<%= question.getType() == QuestionTypeConstants.RECORDED %>">
-					<textarea id="<portlet:namespace />response<%= question.getQuestionId() %>" name="<portlet:namespace />response<%= question.getQuestionId() %>"></textarea>
+					<textarea id="<portlet:namespace />response<%= question.getQuestionId() %>" name="<portlet:namespace />response<%= question.getQuestionId() %>" onkeyup="return keyPress(event, '<%= i %>', '<%= question.getQuestionId() %>');"></textarea>
 				</c:when>
 			</c:choose>
 		</aui:field-wrapper>
@@ -63,3 +66,45 @@ List<Question> questions = QuestionLocalServiceUtil.getQuestionSetQuestions(inte
 		<aui:button type="submit" />
 	</aui:button-row>
 </aui:form>
+
+<script type="text/javascript">
+	var questions = new Array();
+
+	var previousValue="";
+
+	function keyPress(event, num, questionId) {
+
+		var dmp = new diff_match_patch();
+
+		var jsonString = "";
+
+		var now = new Date();
+
+		var recorder;
+
+		var textarea = document.getElementById("<portlet:namespace />response" + questionId);
+
+		var patch = dmp.patch_make(previousValue, textarea.value);
+
+		if (questions[num]) {
+			recorder = questions[num];
+		}
+		else {
+			recorder = new Array();
+		}
+
+		recorder.push({"patch": patch, "timestamp": now.getUTCMilliseconds()});
+
+		for(var i = 0; i < recorder.length; i++) {
+			jsonString += JSON.stringify(recorder[i]) + "/";
+		}
+
+		questions[num] = recorder;
+
+		previousValue = textarea.value;
+
+		document.getElementById("<portlet:namespace />recorder" + questionId).value = jsonString;
+
+		return true;
+	}
+</script>
