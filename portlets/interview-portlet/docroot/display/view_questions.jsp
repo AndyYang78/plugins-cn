@@ -36,11 +36,8 @@ List<Question> questions = QuestionLocalServiceUtil.getQuestionSetQuestions(inte
 	<aui:input name="uuid" value="<%= interview.getUuid() %>" type="hidden" />
 
 	<%
-	for (int i = 0; i < questions.size(); i++) {
-		Question question = questions.get(i);
+	for (Question question : questions) {
 	%>
-
-		<input id="<portlet:namespace />recorder<%= question.getQuestionId() %>" name="<portlet:namespace />recorder<%= question.getQuestionId() %>" type="hidden" />
 
 		<aui:field-wrapper label="<%= HtmlUtil.escape(question.getTitle()) %>">
 			<div class="description"><%= HtmlUtil.escape(question.getDescription()) %></div>
@@ -53,7 +50,9 @@ List<Question> questions = QuestionLocalServiceUtil.getQuestionSetQuestions(inte
 					<textarea id="<portlet:namespace />response<%= question.getQuestionId() %>" name="<portlet:namespace />response<%= question.getQuestionId() %>"></textarea>
 				</c:when>
 				<c:when test="<%= question.getType() == QuestionTypeConstants.RECORDED %>">
-					<textarea id="<portlet:namespace />response<%= question.getQuestionId() %>" name="<portlet:namespace />response<%= question.getQuestionId() %>" onkeyup="return keyPress(event, '<%= i %>', '<%= question.getQuestionId() %>');"></textarea>
+					<input id="<portlet:namespace />response<%= question.getQuestionId() %>" name="<portlet:namespace />recorder<%= question.getQuestionId() %>" type="hidden" />
+
+					<textarea id="<portlet:namespace />recordedResponse<%= question.getQuestionId() %>" name="<portlet:namespace />response<%= question.getQuestionId() %>" onkeyup="return <portlet:namespace>record(event, '<%= question.getQuestionId() %>');"></textarea>
 				</c:when>
 			</c:choose>
 		</aui:field-wrapper>
@@ -63,48 +62,59 @@ List<Question> questions = QuestionLocalServiceUtil.getQuestionSetQuestions(inte
 	%>
 
 	<aui:button-row>
-		<aui:button type="submit" />
+		<aui:button type="submit" onClick="<portlet:namespace>saveRecordedResponses()" />
 	</aui:button-row>
 </aui:form>
 
 <script type="text/javascript">
-	var questions = new Array();
+	var dmp = new diff_match_patch();
 
-	var previousValue="";
+	var recorders = new Array();
 
-	function keyPress(event, num, questionId) {
+	function <portlet:namespace>getRecorder(questionId) {
+		for (var i = 0; i < recorders.length; i++) {
+			var recorder = recorders[i];
 
-		var dmp = new diff_match_patch();
+			if (recorder.questionId == questionId) {
+				return recorder;
+			}
+		}
 
-		var jsonString = "";
+		recorders.push({
+			"questionId": questionId,
+			"patches": new Array(),
+			"previousValue": ""
+		})
+	}
 
+	function <portlet:namespace>record(event, questionId) {
 		var now = new Date();
 
-		var recorder;
+		var recorder = getRecorder(questionId);
 
-		var textarea = document.getElementById("<portlet:namespace />response" + questionId);
+		var recordedResponse = document.getElementById("<portlet:namespace />recordedResponse" + questionId);
 
-		var patch = dmp.patch_make(previousValue, textarea.value);
+		var patch = dmp.patch_make(recorder.previousValue, recordedResponse.value);
 
-		if (questions[num]) {
-			recorder = questions[num];
-		}
-		else {
-			recorder = new Array();
-		}
+		recorder.patches.push({"patch": patch, "timestamp": now.getUTCMilliseconds()});
 
-		recorder.push({"patch": patch, "timestamp": now.getUTCMilliseconds()});
-
-		for(var i = 0; i < recorder.length; i++) {
-			jsonString += JSON.stringify(recorder[i]) + "/";
-		}
-
-		questions[num] = recorder;
-
-		previousValue = textarea.value;
-
-		document.getElementById("<portlet:namespace />recorder" + questionId).value = jsonString;
+		recorder.previousValue = recordedResponse.value;
 
 		return true;
+	}
+
+	function <portlet:namespace>saveRecordedResponses() {
+		for (var i = 0; i < recorders.length(); i++) {
+			var recorder = recorders[i];
+
+			var jsonString = "";
+
+			for(var j = 0; j < recorder.length; i++) {
+				jsonString += JSON.stringify(recorder.patches[j]) + "/";
+			}
+
+			document.getElementById("<portlet:namespace />response" + recorder.questionId).value = jsonString;
+		}
+
 	}
 </script>

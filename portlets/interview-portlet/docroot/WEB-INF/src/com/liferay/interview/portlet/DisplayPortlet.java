@@ -20,7 +20,6 @@ import com.liferay.interview.model.Interview;
 import com.liferay.interview.model.Question;
 import com.liferay.interview.service.InterviewLocalServiceUtil;
 import com.liferay.interview.service.QuestionLocalServiceUtil;
-import com.liferay.interview.util.QuestionTypeConstants;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.servlet.SessionErrors;
@@ -56,12 +55,7 @@ public class DisplayPortlet extends MVCPortlet {
 		for (Question question : questions) {
 			long questionId = question.getQuestionId();
 			String response = ParamUtil.getString(
-					actionRequest, "response" + questionId);
-
-			if (question.getType() == QuestionTypeConstants.RECORDED) {
-				response = ParamUtil.getString(
-					actionRequest, "recorder" + questionId);
-			}
+				actionRequest, "response" + questionId);
 
 			json.put(String.valueOf(questionId), response);
 		}
