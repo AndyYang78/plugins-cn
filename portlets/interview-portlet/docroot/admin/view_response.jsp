@@ -30,8 +30,6 @@ List<Question> questions= QuestionLocalServiceUtil.getQuestionSetQuestions(inter
 JSONObject JSONResponse = JSONFactoryUtil.createJSONObject(interview.getResponse());
 
 List<JSONArray> recordList = new ArrayList<JSONArray>();
-
-int m = 0;
 %>
 
 <liferay-ui:header
@@ -46,9 +44,11 @@ for (Question question : questions) {
 
 		String recorded = JSONResponse.getString(String.valueOf(question.getQuestionId()));
 
-		if(!recorded.equals("")) {
-			for(int j=0; j<recorded.split("/").length; j++) {
-				JSONObject json = JSONFactoryUtil.createJSONObject(recorded.split("/")[j]);
+		if(Validator.isNotNull(recorded)) {
+			String recordResponse[] = recorded.split("/");
+
+			for(int j=0; j<recordResponse.length; j++) {
+				JSONObject json = JSONFactoryUtil.createJSONObject(recordResponse[j]);
 
 				jsonArray.put(json);
 			}
@@ -72,7 +72,8 @@ for (Question question : questions) {
 			</c:when>
 			<c:when test="<%= question.getType() == QuestionTypeConstants.RECORDED %>">
 				<textarea id="<portlet:namespace />response<%= question.getQuestionId() %>" readonly="readonly"></textarea>
-				<button onclick="return replay('<%= question.getQuestionId() %>', '<%= m++ %>')">Replay</button>
+
+				<button onclick="return replay('<%= question.getQuestionId() %>')">Replay</button>
 			</c:when>
 		</c:choose>
 	</aui:field-wrapper>
@@ -81,38 +82,82 @@ for (Question question : questions) {
 }
 %>
 
-	<script type="text/javascript">
-		var recorder = new Array();
+<script type="text/javascript">
 		var dmp = new diff_match_patch();
 
-		<%
-		for (JSONArray ja: recordList) {
-		%>
+		var recorders = new Array();
 
-			recorder.push(<%= ja%>);
+		var i = 0;
 
-		<%
+		function <portlet:namespace />getRecorded(i, questionId) {
+
+			if(i == 0) {
+					recorders.push({
+						"questionId": questionId,
+						"recorderArray": <%= recordList%>
+					})
+			}
+			else {
+					for(var j = 0; j < recorders.length; j++) {
+						if(recorders[j].questionId == questionId) {
+							break;
+						}
+
+						if(j == recorders.length - 1){
+							recorders.push({
+								"questionId": questionId,
+								"recorderArray": <%= recordList%>
+							})
+						}
+
+					}
+				}
+
+			for (var h = 0; h < recorders.length; h++) {
+				var recorder = recorders[h];
+
+				if (recorder.questionId == questionId) {
+					return recorder.recorderArray[h];
+				}
+
+			}
+
 		}
-		%>
 
-		function replay(questionId, i) {
-			var textarea = document.getElementById("<portlet:namespace />response" + questionId);
+		function replay(questionId) {
+			var recordedResponse = document.getElementById("<portlet:namespace />response" + questionId);
 
-			textarea.value = "";
+			recordedResponse.value = "";
 
-			replayEvent(0, questionId, i);
+			var recorder = <portlet:namespace />getRecorded(i, questionId);
+
+			i++;
+
+			replayEvent(0, questionId, recorder);
+
 		}
 
-		function replayEvent(j, questionId, i) {
+		function replayEvent(j, questionId, recorder) {
+			var recordedResponse = document.getElementById("<portlet:namespace />response" + questionId);
 
-			var textarea = document.getElementById("<portlet:namespace />response" + questionId);
+			if(recorder[j] != null) {
+				var result = dmp.patch_apply(recorder[j].patch, recordedResponse.value);
 
-			var result = dmp.patch_apply((recorder[i])[j].patch, textarea.value);
+				recordedResponse.value = result[0];
 
-			textarea.value = result[0];
+				if (j < (recorder.length - 1)) {
+					setTimeout(recorderReplay(j+1, questionId, recorder), (recorder[j+1].timestamp - recorder[j].timestamp));
+				}
+			}
+			else {
+				return;
+			}
 
-			if (j < (recorder[i].length - 1)) {
-				setTimeout("replayEvent("+(j+1)+"," + questionId +","+ i +")", ((recorder[i])[j+1].timestamp - (recorder[i])[j].timestamp));
+		}
+
+		function recorderReplay(j, questionId, recorder) {
+			return function() {
+				replayEvent(j, questionId, recorder);
 			}
 		}
 

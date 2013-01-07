@@ -52,7 +52,7 @@ List<Question> questions = QuestionLocalServiceUtil.getQuestionSetQuestions(inte
 				<c:when test="<%= question.getType() == QuestionTypeConstants.RECORDED %>">
 					<input id="<portlet:namespace />response<%= question.getQuestionId() %>" name="<portlet:namespace />recorder<%= question.getQuestionId() %>" type="hidden" />
 
-					<textarea id="<portlet:namespace />recordedResponse<%= question.getQuestionId() %>" name="<portlet:namespace />response<%= question.getQuestionId() %>" onkeyup="return <portlet:namespace>record(event, '<%= question.getQuestionId() %>');"></textarea>
+					<textarea id="<portlet:namespace />recordedResponse<%= question.getQuestionId() %>" name="<portlet:namespace />response<%= question.getQuestionId() %>" onkeyup="return <portlet:namespace />record(event, '<%= question.getQuestionId() %>');"></textarea>
 				</c:when>
 			</c:choose>
 		</aui:field-wrapper>
@@ -62,7 +62,7 @@ List<Question> questions = QuestionLocalServiceUtil.getQuestionSetQuestions(inte
 	%>
 
 	<aui:button-row>
-		<aui:button type="submit" onClick="<portlet:namespace>saveRecordedResponses()" />
+		<aui:button type="submit" onClick="saveRecordedResponses()" />
 	</aui:button-row>
 </aui:form>
 
@@ -71,7 +71,7 @@ List<Question> questions = QuestionLocalServiceUtil.getQuestionSetQuestions(inte
 
 	var recorders = new Array();
 
-	function <portlet:namespace>getRecorder(questionId) {
+	function <portlet:namespace />getRecorder(questionId) {
 		for (var i = 0; i < recorders.length; i++) {
 			var recorder = recorders[i];
 
@@ -87,10 +87,10 @@ List<Question> questions = QuestionLocalServiceUtil.getQuestionSetQuestions(inte
 		})
 	}
 
-	function <portlet:namespace>record(event, questionId) {
+	function <portlet:namespace />record(event, questionId) {
 		var now = new Date();
 
-		var recorder = getRecorder(questionId);
+		var recorder = <portlet:namespace />getRecorder(questionId);
 
 		var recordedResponse = document.getElementById("<portlet:namespace />recordedResponse" + questionId);
 
@@ -103,13 +103,13 @@ List<Question> questions = QuestionLocalServiceUtil.getQuestionSetQuestions(inte
 		return true;
 	}
 
-	function <portlet:namespace>saveRecordedResponses() {
-		for (var i = 0; i < recorders.length(); i++) {
+	function saveRecordedResponses() {
+		for (var i = 0; i < recorders.length; i++) {
 			var recorder = recorders[i];
 
 			var jsonString = "";
 
-			for(var j = 0; j < recorder.length; i++) {
+			for(var j = 0; j < recorder.patches.length; j++) {
 				jsonString += JSON.stringify(recorder.patches[j]) + "/";
 			}
 
