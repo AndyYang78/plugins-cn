@@ -83,85 +83,85 @@ for (Question question : questions) {
 %>
 
 <script type="text/javascript">
-		var dmp = new diff_match_patch();
+	var dmp = new diff_match_patch();
 
-		var recorders = new Array();
+	var recorders = new Array();
 
-		var i = 0;
+	var i = 0;
 
-		function <portlet:namespace />getRecorded(i, questionId) {
+	function <portlet:namespace />getRecorded(i, questionId) {
 
-			if(i == 0) {
-					recorders.push({
-						"questionId": questionId,
-						"recorderArray": <%= recordList%>
-					})
+		if(i == 0) {
+				recorders.push({
+					"questionId": questionId,
+					"recorderArray": <%= recordList%>
+				})
 			}
-			else {
-					for(var j = 0; j < recorders.length; j++) {
-						if(recorders[j].questionId == questionId) {
-							break;
-						}
-
-						if(j == recorders.length - 1){
-							recorders.push({
-								"questionId": questionId,
-								"recorderArray": <%= recordList%>
-							})
-						}
-
+		else {
+				for(var j = 0; j < recorders.length; j++) {
+					if(recorders[j].questionId == questionId) {
+						break;
 					}
-				}
 
-			for (var h = 0; h < recorders.length; h++) {
-				var recorder = recorders[h];
+					if(j == recorders.length - 1){
+						recorders.push({
+							"questionId": questionId,
+							"recorderArray": <%= recordList%>
+						})
+					}
 
-				if (recorder.questionId == questionId) {
-					return recorder.recorderArray[h];
-				}
-
-			}
-
-		}
-
-		function replay(questionId) {
-			var recordedResponse = document.getElementById("<portlet:namespace />response" + questionId);
-
-			recordedResponse.value = "";
-
-			var recorder = <portlet:namespace />getRecorded(i, questionId);
-
-			i++;
-
-			replayEvent(0, questionId, recorder);
-
-		}
-
-		function replayEvent(j, questionId, recorder) {
-			var recordedResponse = document.getElementById("<portlet:namespace />response" + questionId);
-
-			if(recorder[j] != null) {
-				var result = dmp.patch_apply(recorder[j].patch, recordedResponse.value);
-
-				recordedResponse.value = result[0];
-
-				if (j < (recorder.length - 1)) {
-					setTimeout(recorderReplay(j+1, questionId, recorder), (recorder[j+1].timestamp - recorder[j].timestamp));
 				}
 			}
-			else {
-				return;
+
+		for (var h = 0; h < recorders.length; h++) {
+			var recorder = recorders[h];
+
+			if (recorder.questionId == questionId) {
+				return recorder.recorderArray[h];
 			}
 
 		}
 
-		function recorderReplay(j, questionId, recorder) {
-			return function() {
-				replayEvent(j, questionId, recorder);
+	}
+
+	function replay(questionId) {
+		var recordedResponse = document.getElementById("<portlet:namespace />response" + questionId);
+
+		recordedResponse.value = "";
+
+		var recorder = <portlet:namespace />getRecorded(i, questionId);
+
+		i++;
+
+		replayEvent(0, questionId, recorder);
+
+	}
+
+	function replayEvent(j, questionId, recorder) {
+		var recordedResponse = document.getElementById("<portlet:namespace />response" + questionId);
+
+		if(recorder[j] != null) {
+			var result = dmp.patch_apply(recorder[j].patch, recordedResponse.value);
+
+			recordedResponse.value = result[0];
+
+			if (j < (recorder.length - 1)) {
+				setTimeout(recorderReplay(j+1, questionId, recorder), (recorder[j+1].timestamp - recorder[j].timestamp));
 			}
 		}
+		else {
+			return;
+		}
 
-	</script>
+	}
+
+	function recorderReplay(j, questionId, recorder) {
+		return function() {
+			replayEvent(j, questionId, recorder);
+		}
+	}
+
+</script>
 
 <aui:script>
 	Alloy.on('domready', function (event) {
