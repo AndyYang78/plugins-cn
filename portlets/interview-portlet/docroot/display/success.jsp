@@ -16,4 +16,4 @@
 
 <%@ include file="/display/init.jsp" %>
 
-<liferay-ui:message key="you-have-submited-your-response-successfully" />
+<liferay-ui:message key="you-have-submitted-your-response-successfully" />

@@ -21,6 +21,7 @@
 		<supports>
 			<mime-type>text/html</mime-type>
 		</supports>
+		<resource-bundle>content.Language</resource-bundle>
 		<portlet-info>
 			<title>Interview (Admin)</title>
 			<short-title>Interview (Admin)</short-title>
@@ -51,6 +52,7 @@
 		<supports>
 			<mime-type>text/html</mime-type>
 		</supports>
+		<resource-bundle>content.Language</resource-bundle>
 		<portlet-info>
 			<title>Interview (Display)</title>
 			<short-title>Interview (Display)</short-title>

@@ -107,11 +107,7 @@ List<Question> questions = QuestionLocalServiceUtil.getQuestionSetQuestions(inte
 		for (var i = 0; i < recorders.length; i++) {
 			var recorder = recorders[i];
 
-			var jsonString = "";
-
-			for(var j = 0; j < recorder.patches.length; j++) {
-				jsonString += JSON.stringify(recorder.patches[j]) + "/";
-			}
+			var jsonString = JSON.stringify(recorder.patches);
 
 			document.getElementById("<portlet:namespace />response" + recorder.questionId).value = jsonString;
 		}

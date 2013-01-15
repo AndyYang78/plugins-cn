@@ -20,7 +20,7 @@
 </portlet:renderURL>
 
 <aui:button-row>
-	<aui:button href="<%= editQuestionSetURL %>" value="add-quetion-set" />
+	<aui:button href="<%= editQuestionSetURL %>" value="add-question-set" />
 </aui:button-row>
 
 <liferay-ui:search-container

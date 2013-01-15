@@ -101,7 +101,7 @@ public class AdminPortlet extends MVCPortlet {
 			actionRequest, "expireDateAmPm");
 
 		if (expireDateAmPm == Calendar.PM) {
-			expireDateAmPm += 12;
+			expireDateHour += 12;
 		}
 
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
