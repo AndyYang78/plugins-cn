@@ -50,9 +50,9 @@ List<Question> questions = QuestionLocalServiceUtil.getQuestionSetQuestions(inte
 					<textarea id="<portlet:namespace />response<%= question.getQuestionId() %>" name="<portlet:namespace />response<%= question.getQuestionId() %>"></textarea>
 				</c:when>
 				<c:when test="<%= question.getType() == QuestionTypeConstants.RECORDED %>">
-					<input id="<portlet:namespace />response<%= question.getQuestionId() %>" name="<portlet:namespace />recorder<%= question.getQuestionId() %>" type="hidden" />
+					<input id="<portlet:namespace />response<%= question.getQuestionId() %>" name="<portlet:namespace />response<%= question.getQuestionId() %>" type="hidden" />
 
-					<textarea id="<portlet:namespace />recordedResponse<%= question.getQuestionId() %>" name="<portlet:namespace />response<%= question.getQuestionId() %>" onkeyup="return <portlet:namespace />record(event, '<%= question.getQuestionId() %>');"></textarea>
+					<textarea id="<portlet:namespace />recordedResponse<%= question.getQuestionId() %>" name="<portlet:namespace />recordedResponse<%= question.getQuestionId() %>" onkeyup="return <portlet:namespace />record(event, '<%= question.getQuestionId() %>');"></textarea>
 				</c:when>
 			</c:choose>
 		</aui:field-wrapper>
@@ -62,25 +62,25 @@ List<Question> questions = QuestionLocalServiceUtil.getQuestionSetQuestions(inte
 	%>
 
 	<aui:button-row>
-		<aui:button type="submit" onClick="saveRecordedResponses()" />
+		<aui:button type="submit" onClick="<portlet:namespace />saveRecordedResponses()" />
 	</aui:button-row>
 </aui:form>
 
 <script type="text/javascript">
 	var dmp = new diff_match_patch();
 
-	var recorders = new Array();
+	var <portlet:namespace />recorders = new Array();
 
 	function <portlet:namespace />getRecorder(questionId) {
-		for (var i = 0; i < recorders.length; i++) {
-			var recorder = recorders[i];
+		for (var i = 0; i < <portlet:namespace />recorders.length; i++) {
+			var recorder = <portlet:namespace />recorders[i];
 
 			if (recorder.questionId == questionId) {
 				return recorder;
 			}
 		}
 
-		recorders.push({
+		<portlet:namespace />recorders.push({
 			"questionId": questionId,
 			"patches": new Array(),
 			"previousValue": ""
@@ -103,9 +103,9 @@ List<Question> questions = QuestionLocalServiceUtil.getQuestionSetQuestions(inte
 		return true;
 	}
 
-	function saveRecordedResponses() {
-		for (var i = 0; i < recorders.length; i++) {
-			var recorder = recorders[i];
+	function <portlet:namespace />saveRecordedResponses() {
+		for (var i = 0; i < <portlet:namespace />recorders.length; i++) {
+			var recorder = <portlet:namespace />recorders[i];
 
 			var jsonString = JSON.stringify(recorder.patches);
 

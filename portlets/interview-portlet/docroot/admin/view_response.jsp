@@ -50,7 +50,7 @@ for (Question question : questions) {
 			<c:when test="<%= question.getType() == QuestionTypeConstants.RECORDED %>">
 				<textarea id="<portlet:namespace />response<%= question.getQuestionId() %>" readonly="readonly"></textarea>
 
-				<button onclick="return <portlet:namespace />replay('<%= question.getQuestionId() %>')">Replay</button>
+				<button onclick="return <portlet:namespace />replay('<%= question.getQuestionId() %>')"><liferay-ui:message key="replay" /></button>
 			</c:when>
 		</c:choose>
 	</aui:field-wrapper>
@@ -60,53 +60,71 @@ for (Question question : questions) {
 %>
 
 <aui:script>
-	var dmp = new diff_match_patch();
+	var <portlet:namespace />dmp = new diff_match_patch();
 
-	var responseJSON = <%= interview.getResponse() %>;
+	var <portlet:namespace />recorders = new Array();
 
 	Alloy.on('domready', function (event) {
+		var responseJSON = <%= interview.getResponse() %>;
+
 		var keys = Object.keys(responseJSON);
 
 		for (var i = 0; i < keys.length; i++) {
-			var key = keys[i];
+			var questionId = keys[i];
 
-			var inputElement = document.getElementById("<portlet:namespace />response" + key);
+			var inputElement = document.getElementById("<portlet:namespace />response" + questionId);
 
-			inputElement.value = responseJSON[key];
+			if ((typeof responseJSON[questionId]) == "object") {
+				var recorder = {
+					"questionId" : questionId,
+					"patches" : responseJSON[questionId]
+				});
+
+				<portlet:namespace />recorders.push(recorder);
+
+				inputElement.value = getFinalResponse(recorder);
+			}
+			else {
+				inputElement.value = responseJSON[questionId];
+			}
 		}
 	});
 
-	function <portlet:namespace />getRecorded(questionId) {
-		var recorder = eval('(' + responseJSON[questionId] + ')');
+	function <portlet:namespace />getFinalResponse(recorder) {
+		return "";
+	}
 
-		return recorder;
+	function <portlet:namespace />getPatches(questionId) {
+		for (var i = 0; i < <portlet:namespace />recorders.length; i++) {
+			var recorder = <portlet:namespace />recorders[i];
+
+			if (recorder.questionId == questionId) {
+				return recorder.patches;
+			}
+		}
+
+		return null;
 	}
 
 	function <portlet:namespace />replay(questionId) {
-		var recordedResponse = document.getElementById("<portlet:namespace />response" + questionId);
+		var responseTextarea = document.getElementById("<portlet:namespace />response" + questionId);
 
-		recordedResponse.value = "";
+		responseTextarea.value = "";
 
-		var recorder = <portlet:namespace />getRecorded(questionId);
-
-		<portlet:namespace />replayEvent(0, questionId, recorder);
+		<portlet:namespace />replayEvent(questionId, 0);
 	}
 
-	function <portlet:namespace />replayEvent(i, questionId, recorder) {
-		var recordedResponse = document.getElementById("<portlet:namespace />response" + questionId);
+	function <portlet:namespace />replayEvent(questionId, i) {
+		var responseTextarea = document.getElementById("<portlet:namespace />response" + questionId);
 
-		var result = dmp.patch_apply(recorder[i].patch, recordedResponse.value);
+		var patches = getPatches(questionId);
 
-		recordedResponse.value = result[0];
+		var result = <portlet:namespace />dmp.patch_apply(patches[i].patch, responseTextarea.value);
 
-		if (i < (recorder.length - 1)) {
-			setTimeout(<portlet:namespace />recorderReplay(i+1, questionId, recorder), (recorder[i+1].timestamp - recorder[i].timestamp));
-		}
-	}
+		responseTextarea.value = result[0];
 
-	function <portlet:namespace />recorderReplay(i, questionId, recorder) {
-		return function() {
-			<portlet:namespace />replayEvent(i, questionId, recorder);
+		if (i < (patches.length - 1)) {
+			setTimeout("<portlet:namespace />replayEvent(" + questionId +", " + (i+1) +")", (patches[i+1].timestamp - patches[i].timestamp));
 		}
 	}
 </aui:script>

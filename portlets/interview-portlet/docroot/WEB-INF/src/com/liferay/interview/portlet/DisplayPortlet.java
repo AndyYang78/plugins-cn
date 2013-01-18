@@ -55,13 +55,9 @@ public class DisplayPortlet extends MVCPortlet {
 
 		for (Question question : questions) {
 			long questionId = question.getQuestionId();
+
 			String response = ParamUtil.getString(
 				actionRequest, "response" + questionId);
-
-			if (question.getType() == QuestionTypeConstants.RECORDED) {
-				response = ParamUtil.getString(
-					actionRequest, "recorder" + questionId);
-			}
 
 			json.put(String.valueOf(questionId), response);
 		}

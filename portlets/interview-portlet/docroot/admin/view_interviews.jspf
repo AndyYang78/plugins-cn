@@ -56,7 +56,7 @@ String interviewColumns = "name,emailAddress,responded";
 
 		<liferay-ui:search-container-column-text
 			href="<%= rowURL %>"
-			name="emailAddress"
+			name="email-address"
 			value="<%= interview.getEmailAddress() %>"
 		/>
 
