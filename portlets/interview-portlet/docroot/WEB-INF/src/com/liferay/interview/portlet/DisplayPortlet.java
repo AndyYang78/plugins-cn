@@ -59,7 +59,14 @@ public class DisplayPortlet extends MVCPortlet {
 			String response = ParamUtil.getString(
 				actionRequest, "response" + questionId);
 
-			json.put(String.valueOf(questionId), response);
+			if (question.getType() == QuestionTypeConstants.RECORDED) {
+				json.put(
+					String.valueOf(questionId),
+					JSONFactoryUtil.createJSONArray(response));
+			}
+			else {
+				json.put(String.valueOf(questionId), response);
+			}
 		}
 
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(

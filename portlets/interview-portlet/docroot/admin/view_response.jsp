@@ -78,16 +78,16 @@ for (Question question : questions) {
 				var recorder = {
 					"questionId" : questionId,
 					"patches" : responseJSON[questionId]
-				});
+				}
 
 				<portlet:namespace />recorders.push(recorder);
 
-				inputElement.value = getFinalResponse(recorder);
-			}
-			else {
-				inputElement.value = responseJSON[questionId];
-			}
-		}
+				inputElement.value = <portlet:namespace />getFinalResponse(recorder);
+ 			}
+ 			else {
+ 				inputElement.value = responseJSON[questionId];
+ 			}
+ 		}
 	});
 
 	function <portlet:namespace />getFinalResponse(recorder) {
@@ -117,7 +117,7 @@ for (Question question : questions) {
 	function <portlet:namespace />replayEvent(questionId, i) {
 		var responseTextarea = document.getElementById("<portlet:namespace />response" + questionId);
 
-		var patches = getPatches(questionId);
+		var patches = <portlet:namespace />getPatches(questionId);
 
 		var result = <portlet:namespace />dmp.patch_apply(patches[i].patch, responseTextarea.value);
 

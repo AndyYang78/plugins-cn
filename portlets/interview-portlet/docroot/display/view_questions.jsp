@@ -62,7 +62,7 @@ List<Question> questions = QuestionLocalServiceUtil.getQuestionSetQuestions(inte
 	%>
 
 	<aui:button-row>
-		<aui:button type="submit" onClick="<portlet:namespace />saveRecordedResponses()" />
+		<aui:button type="submit" onClick='<%= renderResponse.getNamespace() + "saveRecordedResponses();" %>' />
 	</aui:button-row>
 </aui:form>
 
