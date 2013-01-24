@@ -83,11 +83,11 @@ for (Question question : questions) {
 				<portlet:namespace />recorders.push(recorder);
 
 				inputElement.value = <portlet:namespace />getFinalResponse(recorder);
- 			}
- 			else {
- 				inputElement.value = responseJSON[questionId];
- 			}
- 		}
+			}
+			else {
+				inputElement.value = responseJSON[questionId];
+			}
+		}
 	});
 
 	function <portlet:namespace />getFinalResponse(recorder) {
