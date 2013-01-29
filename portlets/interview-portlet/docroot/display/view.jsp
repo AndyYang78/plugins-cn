@@ -56,6 +56,9 @@ catch (Exception e) {
 		<liferay-ui:message key="interview-has-expired" />
 	</c:when>
 	<c:otherwise>
+		<noscript>
+			<liferay-ui:message key="your-browser-doesn't-support-the-Javascript" /><br />
+		</noscript>
 		<liferay-ui:message arguments="<%= timeLimit %>" key="time-limit-x-minutes" />
 
 		<portlet:renderURL var="updateStartDateURL">

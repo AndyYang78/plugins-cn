@@ -50,7 +50,15 @@ for (Question question : questions) {
 			<c:when test="<%= question.getType() == QuestionTypeConstants.RECORDED %>">
 				<textarea id="<portlet:namespace />response<%= question.getQuestionId() %>" readonly="readonly"></textarea>
 
-				<button onclick="return <portlet:namespace />replay('<%= question.getQuestionId() %>')"><liferay-ui:message key="replay" /></button>
+				<button id="<portlet:namespace />normalSpeedButton" onclick="return <portlet:namespace />replay(this, '<%= question.getQuestionId() %>')"><liferay-ui:message key="replay" /></button>
+
+				<button id="<portlet:namespace />twoSpeedButton" onclick="return <portlet:namespace />replay(this, '<%= question.getQuestionId() %>')"><liferay-ui:message key="replayX2" /></button>
+
+				<button id="<portlet:namespace />fourSpeedButton" onclick="return <portlet:namespace />replay(this, '<%= question.getQuestionId() %>')"><liferay-ui:message key="replayX4" /></button>
+
+				<button id="<portlet:namespace />pauseButton" onclick="return <portlet:namespace />pause('<%= question.getQuestionId() %>')"><liferay-ui:message key="pause" /></button>
+
+				<button id="<portlet:namespace />stopButton" onclick="return <portlet:namespace />stop('<%= question.getQuestionId() %>')"><liferay-ui:message key="stop" /></button>
 			</c:when>
 		</c:choose>
 	</aui:field-wrapper>
@@ -63,6 +71,14 @@ for (Question question : questions) {
 	var <portlet:namespace />dmp = new diff_match_patch();
 
 	var <portlet:namespace />recorders = new Array();
+
+	var <portlet:namespace />clickedButtonName;
+
+	var <portlet:namespace />flag = 1;
+
+	var <portlet:namespace />j = 0;
+
+	var <portlet:namespace />timeoutId;
 
 	Alloy.on('domready', function (event) {
 		var responseJSON = <%= interview.getResponse() %>;
@@ -106,15 +122,17 @@ for (Question question : questions) {
 		return null;
 	}
 
-	function <portlet:namespace />replay(questionId) {
+	function <portlet:namespace />replay(currentButton, questionId) {
 		var responseTextarea = document.getElementById("<portlet:namespace />response" + questionId);
 
 		responseTextarea.value = "";
 
-		<portlet:namespace />replayEvent(questionId, 0);
+		<portlet:namespace />clickedButtonName = currentButton.id;
+
+		<portlet:namespace />replayEvent(currentButton.id, questionId, 0);
 	}
 
-	function <portlet:namespace />replayEvent(questionId, i) {
+	function <portlet:namespace />replayEvent(buttonId, questionId, i) {
 		var responseTextarea = document.getElementById("<portlet:namespace />response" + questionId);
 
 		var patches = <portlet:namespace />getPatches(questionId);
@@ -124,7 +142,86 @@ for (Question question : questions) {
 		responseTextarea.value = result[0];
 
 		if (i < (patches.length - 1)) {
-			setTimeout("<portlet:namespace />replayEvent(" + questionId +", " + (i+1) +")", (patches[i+1].timestamp - patches[i].timestamp));
+			if (buttonId == "<portlet:namespace />normalSpeedButton") {
+				<portlet:namespace />timeoutId = setTimeout(
+						function() {
+								<portlet:namespace />replayEvent(buttonId, questionId, i+1);
+							}, (patches[i+1].timestamp - patches[i].timestamp)
+					);
+
+				<portlet:namespace />j = i + 1;
+			}
+
+			if (buttonId == "<portlet:namespace />twoSpeedButton") {
+				<portlet:namespace />timeoutId = setTimeout(
+						function() {
+								<portlet:namespace />replayEvent(buttonId, questionId, i+1);
+							}, (patches[i+1].timestamp - patches[i].timestamp)/2
+					);
+
+				<portlet:namespace />j = i + 1;
+			}
+
+			if (buttonId == "<portlet:namespace />fourSpeedButton") {
+				<portlet:namespace />timeoutId = setTimeout(
+						function() {
+								<portlet:namespace />replayEvent(buttonId, questionId, i+1);
+							}, (patches[i+1].timestamp - patches[i].timestamp)/4
+					);
+
+				<portlet:namespace />j = i + 1;
+			}
 		}
+
+	}
+
+	function <portlet:namespace />pause(questionId) {
+		if (<portlet:namespace />flag % 2 != 0) {
+			clearTimeout(<portlet:namespace />timeoutId);
+
+			<portlet:namespace />flag++;
+		}
+		else {
+			if (<portlet:namespace />clickedButtonName == "<portlet:namespace />normalSpeedButton") {
+				<portlet:namespace />replayEvent('<portlet:namespace />normalSpeedButton', questionId, <portlet:namespace />j);
+			}
+
+			if (<portlet:namespace />clickedButtonName == "<portlet:namespace />twoSpeedButton") {
+				<portlet:namespace />replayEvent('<portlet:namespace />twoSpeedButton', questionId, <portlet:namespace />j);
+			}
+
+			if (<portlet:namespace />clickedButtonName == "<portlet:namespace />fourSpeedButton") {
+				<portlet:namespace />replayEvent('<portlet:namespace />fourSpeedButton', questionId, <portlet:namespace />j);
+			}
+
+			<portlet:namespace />flag++;
+		}
+	}
+
+	function <portlet:namespace />stop(questionId) {
+			if (<portlet:namespace />clickedButtonName == "<portlet:namespace />normalSpeedButton") {
+				var responseTextarea = document.getElementById("<portlet:namespace />response" + questionId);
+
+				responseTextarea.value = "";
+
+				<portlet:namespace />replayEvent('<portlet:namespace />normalSpeedButton', questionId, 0);
+			}
+
+			if (<portlet:namespace />clickedButtonName == "<portlet:namespace />twoSpeedButton") {
+				var responseTextarea = document.getElementById("<portlet:namespace />response" + questionId);
+
+				responseTextarea.value = "";
+
+				<portlet:namespace />replayEvent('<portlet:namespace />twoSpeedButton', questionId, 0);
+			}
+
+			if (<portlet:namespace />clickedButtonName == "<portlet:namespace />fourSpeedButton") {
+				var responseTextarea = document.getElementById("<portlet:namespace />response" + questionId);
+
+				responseTextarea.value = "";
+
+				<portlet:namespace />replayEvent('<portlet:namespace />fourSpeedButton', questionId, 0);
+			}
+
 	}
 </aui:script>
