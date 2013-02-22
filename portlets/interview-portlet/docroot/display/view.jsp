@@ -66,8 +66,20 @@ catch (Exception e) {
 			<portlet:param name="uuid" value="<%= uuid %>" />
 		</portlet:renderURL>
 
-		<aui:button-row>
-			<aui:button onClick="<%= updateStartDateURL %>" value="start" />
-		</aui:button-row>
+		<aui:button-row cssClass="start-buttons" />
+
+		<aui:script use="aui-button-item">
+			var buttonRow = A.one(".start-buttons");
+
+			var buttonLabel = "<liferay-ui:message key="start" />";
+
+			var button = new A.ButtonItem({
+				label: buttonLabel,
+				handler: function(event) {
+					location.href = "<%=updateStartDateURL.toString() %>";
+				}
+			})
+				.render(buttonRow);
+		</aui:script>
 	</c:otherwise>
 </c:choose>
