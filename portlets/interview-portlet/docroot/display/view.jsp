@@ -57,29 +57,37 @@ catch (Exception e) {
 	</c:when>
 	<c:otherwise>
 		<noscript>
-			<liferay-ui:message key="your-browser-doesn't-support-the-Javascript" /><br />
+			<liferay-ui:message key="please-enable-javascript-to-start-the-interview" /><br />
 		</noscript>
-		<liferay-ui:message arguments="<%= timeLimit %>" key="time-limit-x-minutes" />
 
-		<portlet:renderURL var="updateStartDateURL">
+		<c:if test="<%= timeLimit > 0 %>">
+			<div class="time-limit-warning portlet-msg-info"></div>
+
+			<aui:script use="aui">
+				var timeLimitWarning = A.one(".time-limit-warning");
+
+				timeLimitWarning.set("innerHTML", "<liferay-ui:message arguments="<%= timeLimit %>" key="once-you-start-the-interview-you-will-have-x-minutes-to-complete-the-questions" />");
+			</aui:script>
+		</c:if>
+
+		<portlet:renderURL var="startInterviewURL">
 			<portlet:param name="mvcPath" value="/display/view_questions.jsp" />
 			<portlet:param name="uuid" value="<%= uuid %>" />
 		</portlet:renderURL>
 
-		<aui:button-row cssClass="start-buttons" />
+		<aui:button-row/>
 
 		<aui:script use="aui-button-item">
-			var buttonRow = A.one(".start-buttons");
+			var buttonRow = A.one(".interview-display-portlet .aui-button-holder");
 
-			var buttonLabel = "<liferay-ui:message key="start" />";
-
-			var button = new A.ButtonItem({
-				label: buttonLabel,
-				handler: function(event) {
-					location.href = "<%=updateStartDateURL.toString() %>";
+			var button = new A.ButtonItem(
+				{
+					label: Liferay.Language.get("start"),
+					handler: function(event) {
+						location.href = "<%= startInterviewURL.toString() %>";
+					}
 				}
-			})
-				.render(buttonRow);
+			).render(buttonRow);
 		</aui:script>
 	</c:otherwise>
 </c:choose>

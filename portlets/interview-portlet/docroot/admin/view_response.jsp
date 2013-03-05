@@ -48,17 +48,12 @@ for (Question question : questions) {
 				<textarea id="<portlet:namespace />response<%= question.getQuestionId() %>" readonly="readonly"></textarea>
 			</c:when>
 			<c:when test="<%= question.getType() == QuestionTypeConstants.RECORDED %>">
-				<textarea id="<portlet:namespace />response<%= question.getQuestionId() %>" readonly="readonly"></textarea>
-
-				<button id="<portlet:namespace />normalSpeedButton" onclick="return <portlet:namespace />replay(this, '<%= question.getQuestionId() %>')"><liferay-ui:message key="replay" /></button>
-
-				<button id="<portlet:namespace />twoSpeedButton" onclick="return <portlet:namespace />replay(this, '<%= question.getQuestionId() %>')"><liferay-ui:message key="replayX2" /></button>
-
-				<button id="<portlet:namespace />fourSpeedButton" onclick="return <portlet:namespace />replay(this, '<%= question.getQuestionId() %>')"><liferay-ui:message key="replayX4" /></button>
-
-				<button id="<portlet:namespace />pauseButton" onclick="return <portlet:namespace />pause('<%= question.getQuestionId() %>')"><liferay-ui:message key="pause" /></button>
-
-				<button id="<portlet:namespace />stopButton" onclick="return <portlet:namespace />stop('<%= question.getQuestionId() %>')"><liferay-ui:message key="stop" /></button>
+				<textarea id="<portlet:namespace />response<%= question.getQuestionId() %>" readonly="readonly"></textarea><br />
+				<button onclick="return <portlet:namespace />rewind('<%= question.getQuestionId() %>')"><liferay-ui:message key="rewind" /></button>
+				<button onclick="return <portlet:namespace />play('<%= question.getQuestionId() %>', 0)"><liferay-ui:message key="pause" /></button>
+				<button onclick="return <portlet:namespace />play('<%= question.getQuestionId() %>', 1)"><liferay-ui:message key="x1" /></button>
+				<button onclick="return <portlet:namespace />play('<%= question.getQuestionId() %>', 2)"><liferay-ui:message key="x2" /></button>
+				<button onclick="return <portlet:namespace />play('<%= question.getQuestionId() %>', 4)"><liferay-ui:message key="x4" /></button>
 			</c:when>
 		</c:choose>
 	</aui:field-wrapper>
@@ -71,14 +66,6 @@ for (Question question : questions) {
 	var <portlet:namespace />dmp = new diff_match_patch();
 
 	var <portlet:namespace />recorders = new Array();
-
-	var <portlet:namespace />clickedButtonName;
-
-	var <portlet:namespace />pauseClickedTimes = 1;
-
-	var <portlet:namespace />replayAgainId = 0;
-
-	var <portlet:namespace />timeoutId;
 
 	Alloy.on('domready', function (event) {
 		var responseJSON = <%= interview.getResponse() %>;
@@ -93,7 +80,9 @@ for (Question question : questions) {
 			if ((typeof responseJSON[questionId]) == "object") {
 				var recorder = {
 					"questionId" : questionId,
-					"patches" : responseJSON[questionId]
+					"patches" : responseJSON[questionId],
+					"playBackStep" : 0,
+					"timeoutId" : 0
 				}
 
 				<portlet:namespace />recorders.push(recorder);
@@ -106,77 +95,84 @@ for (Question question : questions) {
 		}
 	});
 
+	function <portlet:namespace />clearResponseTextarea(questionId) {
+		var responseTextarea = document.getElementById("<portlet:namespace />response" + questionId);
+
+		responseTextarea.value = "";
+	}
+
+	function <portlet:namespace />clearTimeout(recorder) {
+		clearTimeout(recorder.timeoutId);
+
+		recorder.timeoutid = "";
+	}
+
 	function <portlet:namespace />getFinalResponse(recorder) {
 		return "";
 	}
 
-	function <portlet:namespace />getPatches(questionId) {
+	function <portlet:namespace />getRecorder(questionId) {
 		for (var i = 0; i < <portlet:namespace />recorders.length; i++) {
 			var recorder = <portlet:namespace />recorders[i];
 
 			if (recorder.questionId == questionId) {
-				return recorder.patches;
+				return recorder;
 			}
 		}
 
 		return null;
 	}
 
-	function <portlet:namespace />replay(currentButton, questionId) {
-		var responseTextarea = document.getElementById("<portlet:namespace />response" + questionId);
+	function <portlet:namespace />play(questionId, speed) {
+		var recorder = <portlet:namespace />getRecorder(questionId);
 
-		responseTextarea.value = "";
+		if (speed == 0) {
+			<portlet:namespace />clearTimeout(recorder);
+		}
+		else if (recorder.playBackStep == 0) {
+			<portlet:namespace />clearResponseTextarea(questionId);
 
-		<portlet:namespace />clickedButtonName = currentButton.id;
+			<portlet:namespace />playEvent(questionId, speed, 0);
+		}
+		else {
+			<portlet:namespace />clearTimeout(recorder);
 
-		<portlet:namespace />replayEvent(questionId, 0);
+			<portlet:namespace />playEvent(questionId, speed, (recorder.playBackStep + 1));
+		}
 	}
 
-	function <portlet:namespace />replayEvent(questionId, i) {
+	function <portlet:namespace />playEvent(questionId, speed, i) {
+		var recorder = <portlet:namespace />getRecorder(questionId);
+
 		var responseTextarea = document.getElementById("<portlet:namespace />response" + questionId);
 
-		var patches = <portlet:namespace />getPatches(questionId);
+		var patches = recorder.patches;
 
 		var result = <portlet:namespace />dmp.patch_apply(patches[i].patch, responseTextarea.value);
 
 		responseTextarea.value = result[0];
 
+		recorder.playBackStep = i;
+
 		if (i < (patches.length - 1)) {
-			if (<portlet:namespace />clickedButtonName == "<portlet:namespace />normalSpeedButton") {
-				<portlet:namespace />timeoutId = setTimeout("<portlet:namespace />replayEvent(" + questionId +", " + (i+1) +")", (patches[i+1].timestamp - patches[i].timestamp));
+			var timeoutId = setTimeout("<portlet:namespace />playEvent(" + questionId +", " + speed + ", " + (i+1) +")", ((patches[i+1].timestamp - patches[i].timestamp) / speed));
 
-				<portlet:namespace />replayAgainId = i + 1;
-			}
-			else if (<portlet:namespace />clickedButtonName == "<portlet:namespace />twoSpeedButton") {
-				<portlet:namespace />timeoutId = setTimeout("<portlet:namespace />replayEvent(" + questionId +", " + (i+1) +")", (patches[i+1].timestamp - patches[i].timestamp) / 2);
-
-				<portlet:namespace />replayAgainId = i + 1;
-			}
-			else if (<portlet:namespace />clickedButtonName == "<portlet:namespace />fourSpeedButton") {
-				<portlet:namespace />timeoutId = setTimeout("<portlet:namespace />replayEvent(" + questionId +", " + (i+1) +")", (patches[i+1].timestamp - patches[i].timestamp) / 4);
-
-				<portlet:namespace />replayAgainId = i + 1;
-			}
-		}
-
-	}
-
-	function <portlet:namespace />pause(questionId) {
-		if (<portlet:namespace />pauseClickedTimes % 2 != 0) {
-			clearTimeout(<portlet:namespace />timeoutId);
+			recorder.timeoutId = timeoutId;
 		}
 		else {
-			<portlet:namespace />replayEvent(questionId, <portlet:namespace />replayAgainId);
-		}
+			<portlet:namespace />clearTimeout(recorder);
 
-		<portlet:namespace />pauseClickedTimes++;
+			recorder.playBackStep = 0;
+		}
 	}
 
-	function <portlet:namespace />stop(questionId) {
-			var responseTextarea = document.getElementById("<portlet:namespace />response" + questionId);
+	function <portlet:namespace />rewind(questionId) {
+		var recorder = <portlet:namespace />getRecorder(questionId);
 
-			responseTextarea.value = "";
+		<portlet:namespace />clearTimeout(recorder);
 
-			<portlet:namespace />replayEvent(questionId, 0);
+		<portlet:namespace />clearResponseTextarea(questionId);
+
+		recorder.playBackStep = 0;
 	}
 </aui:script>
