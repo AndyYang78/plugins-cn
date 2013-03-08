@@ -54,6 +54,7 @@ for (Question question : questions) {
 				<button onclick="return <portlet:namespace />play('<%= question.getQuestionId() %>', 1)"><liferay-ui:message key="x1" /></button>
 				<button onclick="return <portlet:namespace />play('<%= question.getQuestionId() %>', 2)"><liferay-ui:message key="x2" /></button>
 				<button onclick="return <portlet:namespace />play('<%= question.getQuestionId() %>', 4)"><liferay-ui:message key="x4" /></button>
+				<button onclick="return <portlet:namespace />playStepper('<%= question.getQuestionId() %>')"><liferay-ui:message key="play-step" /></button>
 			</c:when>
 		</c:choose>
 	</aui:field-wrapper>
@@ -87,7 +88,7 @@ for (Question question : questions) {
 
 				<portlet:namespace />recorders.push(recorder);
 
-				inputElement.value = <portlet:namespace />getFinalResponse(recorder);
+				<portlet:namespace />getFinalResponse(recorder);
 			}
 			else {
 				inputElement.value = responseJSON[questionId];
@@ -108,7 +109,7 @@ for (Question question : questions) {
 	}
 
 	function <portlet:namespace />getFinalResponse(recorder) {
-		return "";
+		<portlet:namespace />clearResponseTextarea(recorder.questionId);
 	}
 
 	function <portlet:namespace />getRecorder(questionId) {
@@ -174,5 +175,32 @@ for (Question question : questions) {
 		<portlet:namespace />clearResponseTextarea(questionId);
 
 		recorder.playBackStep = 0;
+	}
+
+	function <portlet:namespace />playStepper(questionId) {
+		var recorder = <portlet:namespace />getRecorder(questionId);
+
+		var responseTextarea = document.getElementById("<portlet:namespace />response" + questionId);
+
+		var patches = recorder.patches;
+
+		if(recorder.playBackStep == 0) {
+			<portlet:namespace />clearResponseTextarea(questionId);
+		}
+		else if(recorder.playBackStep < recorder.patches.length - 1) {
+			<portlet:namespace />clearTimeout(recorder);
+
+			var result = <portlet:namespace />dmp.patch_apply(patches[recorder.playBackStep + 1].patch, responseTextarea.value);
+
+			responseTextarea.value = result[0];
+
+			recorder.playBackStep++;
+		}
+		else {
+			<portlet:namespace />clearResponseTextarea(questionId);
+
+			recorder.playBackStep = 0;
+		}
+
 	}
 </aui:script>

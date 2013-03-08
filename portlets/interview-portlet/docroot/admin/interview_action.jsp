@@ -51,6 +51,7 @@ Interview interview = (Interview)row.getObject();
 		</portlet:renderURL>
 
 		<liferay-ui:icon
+			image="view"
 			message="view-response"
 			url='<%= viewResponseURL %>'
 		/>

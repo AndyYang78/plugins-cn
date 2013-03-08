@@ -60,34 +60,40 @@ catch (Exception e) {
 			<liferay-ui:message key="please-enable-javascript-to-start-the-interview" /><br />
 		</noscript>
 
-		<c:if test="<%= timeLimit > 0 %>">
-			<div class="time-limit-warning portlet-msg-info"></div>
+		<div class="time-limit-warning portlet-msg-info"></div>
 
+		<c:if test="<%= timeLimit > 0 %>">
+			<portlet:renderURL var="startInterviewURL">
+				<portlet:param name="mvcPath" value="/display/view_questions.jsp" />
+				<portlet:param name="uuid" value="<%= uuid %>" />
+			</portlet:renderURL>
+
+			<aui:button-row/>
+
+			<aui:script use="aui-button-item">
+				var timeLimitWarning = A.one(".time-limit-warning");
+
+				var buttonRow = A.one(".interview-display-portlet .aui-button-holder");
+
+				timeLimitWarning.set("innerHTML", "<liferay-ui:message arguments="<%= timeLimit %>" key="once-you-start-the-interview-you-will-have-x-minutes-to-complete-the-questions" />");
+
+				var button = new A.ButtonItem(
+					{
+						label: Liferay.Language.get("start"),
+						handler: function(event) {
+							location.href = "<%= startInterviewURL.toString() %>";
+						}
+					}
+				).render(buttonRow);
+			</aui:script>
+		</c:if>
+		<c:if test="<%= timeLimit == 0 %>">
 			<aui:script use="aui">
 				var timeLimitWarning = A.one(".time-limit-warning");
 
-				timeLimitWarning.set("innerHTML", "<liferay-ui:message arguments="<%= timeLimit %>" key="once-you-start-the-interview-you-will-have-x-minutes-to-complete-the-questions" />");
+				timeLimitWarning.set("innerHTML", "<liferay-ui:message key="you-have-no-time-limit" />");
 			</aui:script>
 		</c:if>
 
-		<portlet:renderURL var="startInterviewURL">
-			<portlet:param name="mvcPath" value="/display/view_questions.jsp" />
-			<portlet:param name="uuid" value="<%= uuid %>" />
-		</portlet:renderURL>
-
-		<aui:button-row/>
-
-		<aui:script use="aui-button-item">
-			var buttonRow = A.one(".interview-display-portlet .aui-button-holder");
-
-			var button = new A.ButtonItem(
-				{
-					label: Liferay.Language.get("start"),
-					handler: function(event) {
-						location.href = "<%= startInterviewURL.toString() %>";
-					}
-				}
-			).render(buttonRow);
-		</aui:script>
 	</c:otherwise>
 </c:choose>
