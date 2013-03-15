@@ -49,12 +49,14 @@ for (Question question : questions) {
 			</c:when>
 			<c:when test="<%= question.getType() == QuestionTypeConstants.RECORDED %>">
 				<textarea id="<portlet:namespace />response<%= question.getQuestionId() %>" readonly="readonly"></textarea><br />
-				<button onclick="return <portlet:namespace />rewind('<%= question.getQuestionId() %>')"><liferay-ui:message key="rewind" /></button>
-				<button onclick="return <portlet:namespace />play('<%= question.getQuestionId() %>', 0)"><liferay-ui:message key="pause" /></button>
-				<button onclick="return <portlet:namespace />play('<%= question.getQuestionId() %>', 1)"><liferay-ui:message key="x1" /></button>
-				<button onclick="return <portlet:namespace />play('<%= question.getQuestionId() %>', 2)"><liferay-ui:message key="x2" /></button>
-				<button onclick="return <portlet:namespace />play('<%= question.getQuestionId() %>', 4)"><liferay-ui:message key="x4" /></button>
-				<button onclick="return <portlet:namespace />playStepper('<%= question.getQuestionId() %>')"><liferay-ui:message key="play-step" /></button>
+				<div class="playControl">
+					<button class="rewindButton" onclick="return <portlet:namespace />rewind('<%= question.getQuestionId() %>')" title=<liferay-ui:message key="rewind" />></button>
+					<button class="pauseButton" onclick="return <portlet:namespace />play('<%= question.getQuestionId() %>', 0)" title="<liferay-ui:message key="pause" />" ></button>
+					<button class="playNormalButton" onclick="return <portlet:namespace />play('<%= question.getQuestionId() %>', 1)" title="<liferay-ui:message key="x1" />" ></button>
+					<button class="playTwoSpeedButton"onclick="return <portlet:namespace />play('<%= question.getQuestionId() %>', 2)" title="<liferay-ui:message key="x2" />"></button>
+					<button class="playFourSpeedButton"onclick="return <portlet:namespace />play('<%= question.getQuestionId() %>', 4)" title="<liferay-ui:message key="x4" />"></button>
+					<button class="playStepButton"onclick="return <portlet:namespace />playStepper('<%= question.getQuestionId() %>')" title="<liferay-ui:message key="play-step" />"></button>
+				</div>
 			</c:when>
 		</c:choose>
 	</aui:field-wrapper>

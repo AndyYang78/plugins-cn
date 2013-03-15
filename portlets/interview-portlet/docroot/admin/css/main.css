@@ -1,0 +1,61 @@
+.pauseButton
+{
+	background:url(../images/pause.png);
+	border:none;
+	height:18px;
+	margin:1px 3px;
+	width:18px;
+}
+
+.playControl
+{
+ 	background: none repeat scroll 0 0 #000000;
+	border-radius: 5px 5px 5px 5px;
+	width:160px;
+	
+}
+
+.playFourSpeedButton
+{
+	background:url(../images/play3.png);
+	border:none;
+	height:18px;
+	margin:1px 3px;	
+	width:18px; 
+}
+
+.playNormalButton
+{
+	background:url(../images/play.png);
+	border:none;
+	height:18px;
+	margin:1px 3px;
+	width:18px;
+}
+
+.playStepButton
+{
+	background:url(../images/bug.png);
+	border:none;
+	height:18px; 
+	margin:1px 3px;
+	width:18px;
+}
+
+.playTwoSpeedButton
+{
+	background:url(../images/play2.png);
+	border:none;
+	height:18px;
+	margin:1px 3px;
+	width:18px; 
+}
+
+.rewindButton
+{
+	background:url(../images/stop.png);
+	border:none;
+	height:18px;
+	margin:1px 3px;
+	width:18px;
+}
