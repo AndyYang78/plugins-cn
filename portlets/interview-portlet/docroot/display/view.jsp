@@ -56,6 +56,8 @@ catch (Exception e) {
 		<liferay-ui:message key="interview-has-expired" />
 	</c:when>
 	<c:otherwise>
+		<div class="interview-introduction"><liferay-ui:message key="interview-introduction" /></div>
+
 		<noscript>
 			<liferay-ui:message key="please-enable-javascript-to-start-the-interview" /><br />
 		</noscript>

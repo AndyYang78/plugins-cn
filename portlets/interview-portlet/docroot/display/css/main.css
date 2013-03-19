@@ -1,3 +1,7 @@
+.interview-display-portlet .interview-introduction {
+	margin: 0 0 2em 0;
+}
+
 .interview-display-portlet .response-question input[type="input"] {
 	width: 90%;
 }
