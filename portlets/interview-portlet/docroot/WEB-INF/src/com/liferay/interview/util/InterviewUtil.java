@@ -42,9 +42,13 @@ public class InterviewUtil {
 
 		expireDateCalendar.setTime(expireDate);
 
-		if (currentDate.after(expireDateCalendar) ||
-			currentDate.after(startDateCalendar)) {
-
+		if (currentDate.after(expireDateCalendar)) {
+			return true;
+		}
+		else if (timeLimit == 0) {
+			return false;
+		}
+		else if (currentDate.after(startDateCalendar)) {
 			return true;
 		}
 
