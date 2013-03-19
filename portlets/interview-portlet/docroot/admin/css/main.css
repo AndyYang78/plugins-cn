@@ -1,61 +1,48 @@
-.pauseButton
-{
-	background:url(../images/pause.png);
-	border:none;
-	height:18px;
-	margin:1px 3px;
-	width:18px;
+.interview-admin-portlet .playback-controls {
+	background-color: #000000;
+	border-radius: 5px;
+	overflow: hidden;
+	width: 132px;
 }
 
-.playControl
-{
- 	background: none repeat scroll 0 0 #000000;
-	border-radius: 5px 5px 5px 5px;
-	width:160px;
-	
+.interview-admin-portlet .playback-controls button {
+	border: none;
+	display: block;
+	float: left;
+	height: 18px;
+	margin: 2px;
+	width: 18px;
 }
 
-.playFourSpeedButton
-{
-	background:url(../images/play3.png);
-	border:none;
-	height:18px;
-	margin:1px 3px;	
-	width:18px; 
+.interview-admin-portlet .playback-controls .pause {
+	background: url(../images/pause.png);
 }
 
-.playNormalButton
-{
-	background:url(../images/play.png);
-	border:none;
-	height:18px;
-	margin:1px 3px;
-	width:18px;
+.interview-admin-portlet .playback-controls .play-x1 {
+	background: url(../images/play.png);
 }
 
-.playStepButton
-{
-	background:url(../images/bug.png);
-	border:none;
-	height:18px; 
-	margin:1px 3px;
-	width:18px;
+.interview-admin-portlet .playback-controls .play-x2 {
+	background: url(../images/play2.png);
 }
 
-.playTwoSpeedButton
-{
-	background:url(../images/play2.png);
-	border:none;
-	height:18px;
-	margin:1px 3px;
-	width:18px; 
+.interview-admin-portlet .playback-controls .play-x4 {
+	background: url(../images/play3.png);
 }
 
-.rewindButton
-{
-	background:url(../images/stop.png);
-	border:none;
-	height:18px;
-	margin:1px 3px;
-	width:18px;
+.interview-admin-portlet .playback-controls .rewind {
+	background: url(../images/stop.png);
+}
+
+.interview-admin-portlet .playback-controls .step {
+	background: url(../images/bug.png);
+}
+
+.interview-admin-portlet .response-question input[type="input"] {
+	width: 90%;
+}
+
+.interview-admin-portlet .response-question textarea {
+	height: 20em;
+	width: 90%;
 }

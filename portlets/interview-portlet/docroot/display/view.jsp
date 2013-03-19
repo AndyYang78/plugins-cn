@@ -60,21 +60,13 @@ catch (Exception e) {
 			<liferay-ui:message key="please-enable-javascript-to-start-the-interview" /><br />
 		</noscript>
 
-		<div class="time-limit-warning portlet-msg-info"></div>
-
 		<c:if test="<%= timeLimit > 0 %>">
+			<div class="time-limit-warning portlet-msg-info"></div>
+
 			<aui:script use="aui">
 				var timeLimitWarning = A.one(".time-limit-warning");
 
 				timeLimitWarning.set("innerHTML", "<liferay-ui:message arguments="<%= timeLimit %>" key="once-you-start-the-interview-you-will-have-x-minutes-to-complete-the-questions" />");
-			</aui:script>
-		</c:if>
-
-		<c:if test="<%= timeLimit == 0 %>">
-			<aui:script use="aui">
-				var timeLimitWarning = A.one(".time-limit-warning");
-
-				timeLimitWarning.set("innerHTML", "<liferay-ui:message key="you-have-no-time-limit" />");
 			</aui:script>
 		</c:if>
 
@@ -97,6 +89,5 @@ catch (Exception e) {
 				}
 			).render(buttonRow);
 		</aui:script>
-
 	</c:otherwise>
 </c:choose>

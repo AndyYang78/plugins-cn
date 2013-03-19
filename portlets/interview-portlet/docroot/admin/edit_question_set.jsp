@@ -47,13 +47,15 @@ catch (NoSuchQuestionSetException nsqse) {
 
 	<liferay-ui:error exception="<%= QuestionSetTitleException.class %>" message="please-enter-a-valid-title" />
 
-	<aui:input name="title">
-		<aui:validator name="required" />
-	</aui:input>
+	<aui:fieldset>
+		<aui:input name="title">
+			<aui:validator name="required" />
+		</aui:input>
 
-	<aui:input name="timeLimit">
-		<aui:validator name="required" />
-	</aui:input>
+		<aui:input name="timeLimit">
+			<aui:validator name="required" />
+		</aui:input>
+	</aui:fieldset>
 
 	<aui:button-row>
 		<aui:button type="submit" />

@@ -51,17 +51,19 @@ catch (NoSuchQuestionException nsqe) {
 
 	<liferay-ui:error exception="<%= QuestionTitleException.class %>" message="please-enter-a-valid-title" />
 
-	<aui:input name="title">
-		<aui:validator name="required" />
-	</aui:input>
+	<aui:fieldset>
+		<aui:input name="title">
+			<aui:validator name="required" />
+		</aui:input>
 
-	<aui:input cssClass="lfr-textarea-container" name="description" type="textarea" />
+		<aui:input cssClass="lfr-textarea-container" name="description" type="textarea" />
 
-	<aui:select label="question-type" name="type">
-		<aui:option label="one-line" selected="<%= (question != null) && (question.getType() == QuestionTypeConstants.ONE_LINE) %>" value="<%= QuestionTypeConstants.ONE_LINE %>" />
-		<aui:option label="multiple-lines" selected="<%= (question != null) && (question.getType() == QuestionTypeConstants.MULTIPLE_LINES) %>" value="<%= QuestionTypeConstants.MULTIPLE_LINES %>" />
-		<aui:option label="recorded" selected="<%= (question != null) && (question.getType() == QuestionTypeConstants.RECORDED) %>" value="<%= QuestionTypeConstants.RECORDED %>" />
-	</aui:select>
+		<aui:select label="question-type" name="type">
+			<aui:option label="one-line" selected="<%= (question != null) && (question.getType() == QuestionTypeConstants.ONE_LINE) %>" value="<%= QuestionTypeConstants.ONE_LINE %>" />
+			<aui:option label="multiple-lines" selected="<%= (question != null) && (question.getType() == QuestionTypeConstants.MULTIPLE_LINES) %>" value="<%= QuestionTypeConstants.MULTIPLE_LINES %>" />
+			<aui:option label="recorded" selected="<%= (question != null) && (question.getType() == QuestionTypeConstants.RECORDED) %>" value="<%= QuestionTypeConstants.RECORDED %>" />
+		</aui:select>
+	</aui:fieldset>
 
 	<aui:button-row>
 		<aui:button type="submit" />

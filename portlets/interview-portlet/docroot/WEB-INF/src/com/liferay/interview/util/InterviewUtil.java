@@ -23,36 +23,30 @@ import java.util.Date;
 public class InterviewUtil {
 
 	public static boolean isExpired(
-		Date startDate, int timeLimit, Date expireDate) {
+		Date interviewStartDate, int timeLimit, Date interviewExpireDate) {
 
-		if (startDate == null) {
-			return false;
-		}
+		Calendar currentTime = Calendar.getInstance();
 
-		Calendar currentDate = Calendar.getInstance();
+		currentTime.setTime(new Date());
 
-		currentDate.setTime(new Date());
+		Calendar interviewExpiration = Calendar.getInstance();
 
-		Calendar startDateCalendar = Calendar.getInstance();
+		interviewExpiration.setTime(interviewExpireDate);
 
-		startDateCalendar.setTime(startDate);
-		startDateCalendar.add(Calendar.MINUTE, timeLimit);
-
-		Calendar expireDateCalendar = Calendar.getInstance();
-
-		expireDateCalendar.setTime(expireDate);
-
-		if (currentDate.after(expireDateCalendar)) {
-			return true;
-		}
-		else if (timeLimit == 0) {
-			return false;
-		}
-		else if (currentDate.after(startDateCalendar)) {
+		if (currentTime.after(interviewExpiration)) {
 			return true;
 		}
 
-		return false;
+		if ((interviewStartDate == null) || (timeLimit == 0)) {
+			return false;
+		}
+
+		Calendar timeLimitExpiration = Calendar.getInstance();
+
+		timeLimitExpiration.setTime(interviewStartDate);
+		timeLimitExpiration.add(Calendar.MINUTE, timeLimit);
+
+		return currentTime.after(timeLimitExpiration);
 	}
 
 }

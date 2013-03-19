@@ -61,31 +61,33 @@ catch (NoSuchInterviewException nsie) {
 		</aui:field-wrapper>
 	</c:if>
 
-	<aui:input name="name">
-		<aui:validator name="required" />
-	</aui:input>
+	<aui:fieldset>
+		<aui:input name="name">
+			<aui:validator name="required" />
+		</aui:input>
 
-	<aui:input name="emailAddress">
-		<aui:validator name="required" />
-	</aui:input>
+		<aui:input name="emailAddress">
+			<aui:validator name="required" />
+		</aui:input>
 
-	<aui:input name="expireDate" />
+		<aui:input name="expireDate" />
 
-	<aui:select label="question-set" name="questionSetId">
+		<aui:select label="question-set" name="questionSetId">
 
-		<%
-		List<QuestionSet> questionSets = QuestionSetLocalServiceUtil.getQuestionSets(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+			<%
+			List<QuestionSet> questionSets = QuestionSetLocalServiceUtil.getQuestionSets(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
-		for (QuestionSet questionSet : questionSets) {
-		%>
+			for (QuestionSet questionSet : questionSets) {
+			%>
 
-			<aui:option label="<%= questionSet.getTitle() %>" selected="<%= (interview != null) && (interview.getQuestionSetId() == questionSet.getQuestionSetId()) %>" value="<%= questionSet.getQuestionSetId() %>" />
+				<aui:option label="<%= questionSet.getTitle() %>" selected="<%= (interview != null) && (interview.getQuestionSetId() == questionSet.getQuestionSetId()) %>" value="<%= questionSet.getQuestionSetId() %>" />
 
-		<%
-		}
-		%>
+			<%
+			}
+			%>
 
-	</aui:select>
+		</aui:select>
+	<aui:fieldset>
 
 	<aui:button-row>
 		<aui:button type="submit" />

@@ -1,0 +1,8 @@
+.interview-display-portlet .response-question input[type="input"] {
+	width: 90%;
+}
+
+.interview-display-portlet .response-question textarea {
+	height: 20em;
+	width: 90%;
+}

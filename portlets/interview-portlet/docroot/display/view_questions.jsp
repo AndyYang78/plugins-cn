@@ -39,7 +39,7 @@ List<Question> questions = QuestionLocalServiceUtil.getQuestionSetQuestions(inte
 	for (Question question : questions) {
 	%>
 
-		<aui:field-wrapper label="<%= HtmlUtil.escape(question.getTitle()) %>">
+		<aui:field-wrapper cssClass="response-question" label="<%= HtmlUtil.escape(question.getTitle()) %>">
 			<div class="description"><%= HtmlUtil.escape(question.getDescription()) %></div>
 
 			<c:choose>
@@ -62,7 +62,7 @@ List<Question> questions = QuestionLocalServiceUtil.getQuestionSetQuestions(inte
 	%>
 
 	<aui:button-row>
-		<aui:button type="submit" onClick='<%= renderResponse.getNamespace() + "saveRecordedResponses();" %>' />
+		<aui:button onClick='<%= renderResponse.getNamespace() + "saveRecordedResponses();" %>' type="submit" value="submit" />
 	</aui:button-row>
 </aui:form>
 
