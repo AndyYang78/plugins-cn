@@ -43,6 +43,5 @@ if (Validator.isNotNull(portletResource)) {
 }
 
 int defaultInterviewValidPeriod = GetterUtil.getInteger(preferences.getValue("defaultInterviewValidPeriod", "14"));
-
 String displayPortletPageURL = preferences.getValue("displayPortletPageURL", null);
 %>
