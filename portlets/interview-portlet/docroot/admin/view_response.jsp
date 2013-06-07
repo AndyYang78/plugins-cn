@@ -49,6 +49,7 @@ for (Question question : questions) {
 			</c:when>
 			<c:when test="<%= question.getType() == QuestionTypeConstants.RECORDED %>">
 				<textarea id="<portlet:namespace />response<%= question.getQuestionId() %>" readonly="readonly"></textarea><br />
+
 				<div class="playback-controls">
 					<button class="rewind" onclick="return <portlet:namespace />rewind('<%= question.getQuestionId() %>')" title="<liferay-ui:message key="rewind" />" />
 					<button class="pause" onclick="return <portlet:namespace />play('<%= question.getQuestionId() %>', 0)" title="<liferay-ui:message key="pause" />" />

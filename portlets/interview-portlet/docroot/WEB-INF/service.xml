@@ -66,6 +66,7 @@
 		<!-- Other fields -->
 
 		<column name="title" type="String" />
+		<column name="introduction" type="String" />
 		<column name="timeLimit" type="int" />
 	</entity>
 	<exceptions>

@@ -22,10 +22,18 @@ String redirect = ParamUtil.getString(request, "redirect");
 
 long interviewId = ParamUtil.getLong(request, "interviewId");
 
+Calendar expiredDate = CalendarFactoryUtil.getCalendar();
+
+if (interviewId <= 0) {
+	expiredDate.add(Calendar.DATE, defaultInterviewValidPeriod);
+}
+
 Interview interview = null;
 
 try {
 	interview = InterviewLocalServiceUtil.getInterview(interviewId);
+
+	expiredDate.setTime(interview.getExpireDate());
 }
 catch (NoSuchInterviewException nsie) {
 }
@@ -70,7 +78,7 @@ catch (NoSuchInterviewException nsie) {
 			<aui:validator name="required" />
 		</aui:input>
 
-		<aui:input name="expireDate" />
+		<aui:input name="expireDate" value="<%= expiredDate %>" />
 
 		<aui:select label="question-set" name="questionSetId">
 
@@ -87,7 +95,7 @@ catch (NoSuchInterviewException nsie) {
 			%>
 
 		</aui:select>
-	<aui:fieldset>
+	</aui:fieldset>
 
 	<aui:button-row>
 		<aui:button type="submit" />

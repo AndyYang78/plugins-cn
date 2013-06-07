@@ -52,7 +52,9 @@ catch (NoSuchQuestionSetException nsqse) {
 			<aui:validator name="required" />
 		</aui:input>
 
-		<aui:input name="timeLimit">
+		<aui:input cssClass="lfr-textarea-container" name="introduction" type="textarea" />
+
+		<aui:input name="timeLimit" suffix="minutes" type="text">
 			<aui:validator name="required" />
 		</aui:input>
 	</aui:fieldset>

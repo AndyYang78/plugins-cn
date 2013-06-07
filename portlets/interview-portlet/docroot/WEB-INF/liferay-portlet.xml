@@ -5,12 +5,15 @@
 	<portlet>
 		<portlet-name>1</portlet-name>
 		<icon>/icon.png</icon>
-		<configuration-action-class>com.liferay.portal.kernel.portlet.DefaultConfigurationAction</configuration-action-class>
-		<instanceable>false</instanceable>
+		<configuration-action-class>com.liferay.interview.action.ConfigurationActionImpl</configuration-action-class>
+		<control-panel-entry-category>content</control-panel-entry-category>
+		<control-panel-entry-weight>15.0</control-panel-entry-weight>
+		<preferences-unique-per-layout>false</preferences-unique-per-layout>
 		<header-portlet-css>/admin/css/main.css</header-portlet-css>
 		<header-portlet-javascript>/js/diff_match_patch.js</header-portlet-javascript>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>interview-admin-portlet</css-class-wrapper>
+		<system>true</system>
 	</portlet>
 	<portlet>
 		<portlet-name>2</portlet-name>

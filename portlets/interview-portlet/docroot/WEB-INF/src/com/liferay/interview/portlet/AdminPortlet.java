@@ -197,6 +197,8 @@ public class AdminPortlet extends MVCPortlet {
 
 		long questionSetId = ParamUtil.getLong(actionRequest, "questionSetId");
 		String title = ParamUtil.getString(actionRequest, "title");
+		String introduction = ParamUtil.getString(
+			actionRequest, "introduction");
 		int timeLimit = ParamUtil.getInteger(actionRequest, "timeLimit");
 
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
@@ -205,11 +207,12 @@ public class AdminPortlet extends MVCPortlet {
 		try {
 			if (questionSetId <= 0) {
 				QuestionSetLocalServiceUtil.addQuestionSet(
-					title, timeLimit, serviceContext);
+					title, introduction, timeLimit, serviceContext);
 			}
 			else {
 				QuestionSetLocalServiceUtil.updateQuestionSet(
-					questionSetId, title, timeLimit, serviceContext);
+					questionSetId, title, introduction, timeLimit,
+					serviceContext);
 			}
 
 		}

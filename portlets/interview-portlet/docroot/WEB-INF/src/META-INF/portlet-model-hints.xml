@@ -23,7 +23,9 @@
 		<field name="modifiedDate" type="Date" />
 		<field name="questionSetId" type="long" />
 		<field name="title" type="String" />
-		<field name="description" type="String" />
+		<field name="description" type="String">
+			<hint name="max-length">500</hint>
+		</field>
 		<field name="type" type="int" />
 		<field name="order" type="int" />
 	</model>
@@ -33,6 +35,9 @@
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
 		<field name="title" type="String" />
+		<field name="introduction" type="String">
+			<hint name="max-length">500</hint>
+		</field>
 		<field name="timeLimit" type="int" />
 	</model>
 </model-hints>

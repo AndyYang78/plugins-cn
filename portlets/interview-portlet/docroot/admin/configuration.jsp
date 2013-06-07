@@ -19,9 +19,16 @@
 <liferay-portlet:actionURL portletConfiguration="true" var="configurationURL" />
 
 <aui:form action="<%= configurationURL %>" method="post" name="fm">
-	<aui:input name="<%= Constants.CMD %>" value="<%= Constants.UPDATE %>" type="hidden" />
+	<liferay-ui:error key="displayPortletPageURL" message="please-enter-a-valid-display-portlet-page-url" />
+	<liferay-ui:error key="defaultInterviewValidPeriod" message="please-enter-a-valid-default-interview-valid-period" />
 
-	<aui:input name="preferences--displayURL--" />
+	<aui:fieldset>
+		<aui:input name="<%= Constants.CMD %>" value="<%= Constants.UPDATE %>" type="hidden" />
+
+		<aui:input label="display-portlet-page-url" name="preferences--displayPortletPageURL--" value="<%= displayPortletPageURL %>" />
+
+		<aui:input name="preferences--defaultInterviewValidPeriod--" size="3" suffix="days" type="text" value="<%= defaultInterviewValidPeriod %>" />
+	</aui:fieldset>
 
 	<aui:button-row>
 		<aui:button type="submit" />
