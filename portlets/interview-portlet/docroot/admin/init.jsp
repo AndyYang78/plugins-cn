@@ -20,6 +20,7 @@
 page import="com.liferay.interview.InterviewNameException" %><%@
 page import="com.liferay.interview.QuestionSetTitleException" %><%@
 page import="com.liferay.interview.QuestionTitleException" %><%@
+page import="com.liferay.interview.util.PortletPropsValues" %><%@
 page import="com.liferay.portal.kernel.dao.orm.QueryUtil" %><%@
 page import="com.liferay.portal.kernel.dao.search.ResultRow" %><%@
 page import="com.liferay.portal.kernel.util.CalendarFactoryUtil" %><%@
@@ -42,6 +43,7 @@ if (Validator.isNotNull(portletResource)) {
 	preferences = PortletPreferencesFactoryUtil.getPortletSetup(request, portletResource);
 }
 
-int defaultInterviewValidPeriod = GetterUtil.getInteger(preferences.getValue("defaultInterviewValidPeriod", "14"));
+int defaultInterviewValidPeriod = GetterUtil.getInteger(preferences.getValue("defaultInterviewValidPeriod", PortletPropsValues.DEFAULT_INTERVIEW_VALID_PERIOD));
+
 String displayPortletPageURL = preferences.getValue("displayPortletPageURL", null);
 %>
