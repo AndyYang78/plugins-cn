@@ -34,7 +34,7 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 		throws Exception {
 
 		validate(actionRequest);
-
+		System.out.println("111");
 		super.processAction(portletConfig, actionRequest, actionResponse);
 	}
 
